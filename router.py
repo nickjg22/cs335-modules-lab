@@ -8,16 +8,17 @@ class TelemetryBufferQueue:
     Selection: Should we use a Static Array or a Dynamic Linked List?
     """
     def __init__(self):
-        # TODO: Instantiate the correct structure chosen from your tasks
+        # Instantiated with the dynamic structure to handle variable bursts
         self.storage = DoublyLinkedList() 
 
     def enqueue_packet(self, packet: dict) -> None:
-        """TODO: Add packet to the queue"""
-        pass
+        """Add a packet to the queue (Insert at the Head)"""
+        self.storage.insert_at_head(packet)
 
     def dequeue_packet(self) -> dict:
-        """TODO: Remove and return the oldest packet"""
-        pass
+        """Remove and return the oldest packet (Remove from the Tail)"""
+        # If queue is empty, remove_from_tail returns None
+        return self.storage.remove_from_tail()
 
 
 class EmergencyOverrideStack:
@@ -27,18 +28,29 @@ class EmergencyOverrideStack:
     Selection: Array-based stack vs Linked List stack? 
     """
     def __init__(self, max_capacity=10):
-        # TODO: Instantiate the correct structure to optimize access and enforce capacity limits
+        # Instantiated with a fixed size to respect memory limits
         self.storage = StaticArray(max_capacity)
+        self.max_capacity = max_capacity
         self.top_index = -1
 
     def push_critical_signal(self, error_code: str) -> None:
-        """TODO: Push onto stack. Raise OverflowError if max_capacity exceeded."""
-        pass
+        """Push onto stack. Raise OverflowError if max_capacity exceeded."""
+        if self.top_index >= self.max_capacity - 1:
+            raise OverflowError("Emergency stack is full! Cannot push critical signal.")
+        
+        self.top_index += 1
+        # Change bracket assignment to explicit .set() method
+        self.storage.set(self.top_index, error_code)
 
     def pop_critical_signal(self) -> str:
-        """TODO: Pop from stack. Raise IndexError if empty."""
-        pass
-
+        """Pop from stack. Raise IndexError if empty."""
+        if self.top_index == -1:
+            raise IndexError("Emergency stack is empty! No critical signals to pop.")
+        
+        # Change bracket retrieval to explicit .get() method
+        error_code = self.storage.get(self.top_index)
+        self.top_index -= 1
+        return error_code
 
 class GridZoneNode:
     """
